@@ -105,6 +105,8 @@ http://127.0.0.1:8000
 
 ## Redis Setup
 
+The system uses Redis for caching attendance statistics.
+
 ### Start Redis Using Docker
 ```bash
 docker run -d --name redis-server -p 6379:6379 redis:latest
@@ -123,6 +125,8 @@ PONG
 ---
 
 ## Authentication (Sanctum)
+
+This project uses **Laravel Sanctum**.
 
 ### LOGIN API  
 POST → `/api/login`
@@ -168,6 +172,14 @@ Authorization: Bearer <token>
 | GET | /api/students | List students |
 | POST | /api/students | Create student |
 | GET | /api/students/{id} | Show student |
+
+
+### Attendance
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/attendance/bulk | Submit daily attendance |
+| GET | /api/attendance/monthly | Monthly report |
+
 
 ---
 
@@ -284,6 +296,8 @@ Accept: application/json
 
 # Attendance Report Command (CLI)
 
+A custom Artisan command is included:
+
 ```bash
 php artisan attendance:generate-report {month} {class}
 ```
@@ -297,13 +311,20 @@ php artisan attendance:generate-report 2025-02 10
 
 # Events & Listeners
 
+This project uses Laravel’s event system for attendance tracking:
+
 - **AttendanceRecorded** event  
 - **UpdateAttendanceStats** listener  
   → Updates Redis cache
 
+These run automatically after bulk attendance submission.
+
 ---
 
 # AI Workflow Documentation
+
+AI-assisted development details, prompts, and explanation are included in:
+
 ```
 AI_WORKFLOW.md
 ```
