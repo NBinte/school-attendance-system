@@ -25,7 +25,7 @@ This backend exposes APIs for:
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/your-username/school-attendance-system.git
+git clone https://github.com/NBinte/school-attendance-system.git
 cd school-attendance-system
 ```
 
