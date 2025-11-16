@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -8,3 +9,6 @@ Route::get('/health', function () {
 });
 
 Route::apiResource('students', StudentController::class);
+
+Route::post('attendance/bulk', [AttendanceController::class, 'bulkRecord']);
+Route::get('attendance/monthly', [AttendanceController::class, 'monthlyReport']);

@@ -19,26 +19,31 @@ class AttendanceController extends Controller
     public function bulkRecord(Request $request)
     {
         $request->validate([
-            'date'            => ['required', 'date'],
-            'class'           => ['required', 'string'],
-            'section'         => ['nullable', 'string'],
-            'attendance'      => ['required', 'array'],
+            'date'                    => ['required', 'date'],
+            'class'                   => ['required', 'string'],
+            'section'                 => ['nullable', 'string'],
+            'attendance'              => ['required', 'array'],
             'attendance.*.student_id' => ['required', 'integer'],
             'attendance.*.status'     => ['required', 'in:present,absent,late'],
             'attendance.*.note'       => ['nullable', 'string'],
         ]);
 
-        $this->service->recordBulk(
-            date: $request->date,
-            class: $request->class,
-            section: $request->section,
-            attendanceData: $request->attendance,
-            recordedBy: 1 // later replaced with auth user id
-        );
+        try {
+            $this->service->recordBulk(
+                date: $request->date,
+                class: $request->class,
+                section: $request->section,
+                attendanceData: $request->attendance,
+                recordedBy: 1
+            );
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        }
 
         return response()->json(['message' => 'Attendance recorded successfully']);
     }
-
     // GET /api/attendance/monthly?month=2025-02&class=10
     public function monthlyReport(Request $request)
     {
