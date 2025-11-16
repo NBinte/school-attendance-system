@@ -59,4 +59,21 @@ class AttendanceController extends Controller
 
         return response()->json($data);
     }
+
+    public function stats(Request $request)
+    {
+        $request->validate([
+            'date'    => ['required', 'date'],
+            'class'   => ['nullable', 'string'],
+            'section' => ['nullable', 'string'],
+        ]);
+
+        $stats = $this->service->getDailyStats(
+            date: $request->date,
+            class: $request->class,
+            section: $request->section
+        );
+
+        return response()->json($stats);
+    }
 }
