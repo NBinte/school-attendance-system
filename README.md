@@ -1,7 +1,7 @@
 # School Attendance System – Backend (Laravel)
 
 ## Overview
-This is the backend API for the School Attendance System.  
+This is the backend API for the School Attendance System.
 Built using **Laravel 12**, **MySQL**, **Redis**, and **Sanctum authentication**.
 
 This backend exposes APIs for:
@@ -84,7 +84,7 @@ CREATE DATABASE school_attendance;
 php artisan migrate
 ```
 
-(Optional) Add seeders if included:
+(Optional)  
 ```bash
 php artisan db:seed
 ```
@@ -92,13 +92,11 @@ php artisan db:seed
 ---
 
 ## Running the Backend
-
-### Start Laravel
 ```bash
 php artisan serve
 ```
 
-Backend runs at:
+Backend URL:
 ```
 http://127.0.0.1:8000
 ```
@@ -106,8 +104,6 @@ http://127.0.0.1:8000
 ---
 
 ## Redis Setup
-
-The system uses Redis for caching attendance statistics.
 
 ### Start Redis Using Docker
 ```bash
@@ -128,78 +124,127 @@ PONG
 
 ## Authentication (Sanctum)
 
-This project uses **Laravel Sanctum**.
-
-### Test Login
+### LOGIN API  
 POST → `/api/login`
 
-**Credentials (example):**
+#### Headers
 ```
-email: admin@example.com
-password: password123
+Content-Type: application/json
+Accept: application/json
 ```
 
-Response includes:
-- token
-- user object
+#### Body
+```json
+{
+  "email": "admin@example.com",
+  "password": "password123"
+}
+```
 
-Use the token for all authenticated calls:
+#### Successful Response
+```json
+{
+  "token": "your_token_here",
+  "user": {
+    "id": 1,
+    "email": "admin@example.com"
+  }
+}
+```
+
+Use token for protected routes:
 ```
 Authorization: Bearer <token>
 ```
 
 ---
 
-## API Endpoints
+# API Endpoints
 
-### Students
+## Students
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | /api/students | List students |
 | POST | /api/students | Create student |
 | GET | /api/students/{id} | Show student |
 
-### Attendance
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /api/attendance/bulk | Submit daily attendance |
-| GET | /api/attendance/monthly | Monthly report |
+---
+
+# Test API Using Insomnia/Postman
 
 ---
 
-## Attendance Report Command
+## 1. LIST STUDENTS  
+GET → `/api/students`
 
-A custom Artisan command is included:
-
-```bash
-php artisan attendance:generate-report {month} {class}
+### Headers
+```
+Authorization: Bearer <token>
+Accept: application/json
 ```
 
-Example:
-```bash
-php artisan attendance:generate-report 2025-02 10
+### Example Response
+```json
+[
+  {
+    "id": 1,
+    "name": "Test Student",
+    "student_id": "S-001",
+    "class": "10",
+    "section": "A"
+  }
+]
 ```
 
-This generates a monthly attendance summary for the selected class.
+---
+
+## 2. CREATE STUDENT  
+POST → `/api/students`
+
+### Headers
+```
+Authorization: Bearer <token>
+Content-Type: application/json
+Accept: application/json
+```
+
+### Body
+```json
+{
+  "name": "Test Student",
+  "student_id": "S-001",
+  "class": "10",
+  "section": "A"
+}
+```
 
 ---
 
-## Events & Listeners
+## 3. SHOW STUDENT  
+GET → `/api/students/1`
 
-This project uses Laravel’s event system for attendance tracking:
-
-- **AttendanceRecorded** event  
-- **UpdateAttendanceStats** listener  
-  - Updates Redis cache with daily attendance summary
-
-These run automatically after bulk attendance submission.
+### Headers
+```
+Authorization: Bearer <token>
+Accept: application/json
+```
 
 ---
 
-## Test API Using Insomnia/Postman
+# Attendance APIs
 
-### Example: Record Attendance  
+## 4. RECORD ATTENDANCE (BULK)  
 POST → `/api/attendance/bulk`
+
+### Headers
+```
+Authorization: Bearer <token>
+Content-Type: application/json
+Accept: application/json
+```
+
+### Body
 ```json
 {
   "date": "2025-02-15",
@@ -214,21 +259,62 @@ POST → `/api/attendance/bulk`
 
 ---
 
-## AI Workflow Documentation
+## 5. MONTHLY REPORT  
+GET → `/api/attendance/monthly?month=2025-02&class=10`
 
-AI-assisted development details, prompts, and explanation are included in:
+### Headers
+```
+Authorization: Bearer <token>
+Accept: application/json
+```
 
+### Response Example
+```json
+[
+  {
+    "student": { "name": "Test Student", "student_id": "S-001" },
+    "date": "2025-02-15",
+    "status": "present",
+    "note": null
+  }
+]
+```
+
+---
+
+# Attendance Report Command (CLI)
+
+```bash
+php artisan attendance:generate-report {month} {class}
+```
+
+Example:
+```bash
+php artisan attendance:generate-report 2025-02 10
+```
+
+---
+
+# Events & Listeners
+
+- **AttendanceRecorded** event  
+- **UpdateAttendanceStats** listener  
+  → Updates Redis cache
+
+---
+
+# AI Workflow Documentation
 ```
 AI_WORKFLOW.md
 ```
 
 ---
 
-## Author
+# Author
 Nuzhat Binte Islam  
 School Attendance Backend – Laravel
 
 ---
 
-## Done
+# Done
 Backend is fully ready for deployment, testing, or integration with the frontend.
