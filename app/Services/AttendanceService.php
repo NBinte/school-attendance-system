@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Attendance;
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
+use App\Events\AttendanceRecorded;
 
 class AttendanceService
 {
@@ -31,7 +32,7 @@ class AttendanceService
                     throw new \Exception("Invalid student_id: {$entry['student_id']} for class/section.");
                 }
 
-                Attendance::updateOrCreate(
+                $attendance = Attendance::updateOrCreate(
                     [
                         'student_id' => $entry['student_id'],
                         'date'       => $date,
@@ -42,6 +43,9 @@ class AttendanceService
                         'recorded_by' => $recordedBy,
                     ]
                 );
+
+                // Fire event for each record
+                AttendanceRecorded::dispatch($attendance);
             }
 
             return true;
