@@ -149,7 +149,7 @@ AI actively collaborated throughout project development by:
 - Providing step-by-step code
 - Debugging errors quickly
 - Ensuring REST API correctness
-- Preparing documentation for submissions
+- Preparing documentation
 - Organizing all required deliverables
 
 ---
